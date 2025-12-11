@@ -1,0 +1,94 @@
+package com.example.myapplication;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+public class MainActivity extends AppCompatActivity {
+
+    private WebView webView;
+    private TextView tvEmail, tvLikeCount;
+    private Button btnLike, btnDislike, btnShare, btnUpload, btnProfile;
+    private FirebaseAuth mAuth;
+    private int likeCount = 200;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        webView = findViewById(R.id.webView);
+        tvEmail = findViewById(R.id.tvEmail);
+        tvLikeCount = findViewById(R.id.tvLikeCount);
+        btnLike = findViewById(R.id.btnLike);
+        btnDislike = findViewById(R.id.btnDislike);
+        btnShare = findViewById(R.id.btnShare);
+        btnUpload = findViewById(R.id.btnUpload);
+        btnProfile = findViewById(R.id.btnProfile);
+
+        tvEmail.setText(currentUser.getEmail());
+
+        setupWebView();
+        setupButtons();
+    }
+
+    private void setupWebView() {
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
+        
+        webView.setWebViewClient(new WebViewClient());
+        // Load the responsive website URL here. 
+        // Since the file is not available to me, I'm using a placeholder.
+        // If it's a local file in assets: webView.loadUrl("file:///android_asset/index.html");
+        webView.loadUrl("https://www.google.com"); 
+    }
+
+    private void setupButtons() {
+        btnLike.setOnClickListener(v -> {
+            likeCount++;
+            tvLikeCount.setText(String.valueOf(likeCount));
+        });
+
+        btnDislike.setOnClickListener(v -> {
+            if (likeCount > 0) likeCount--;
+            tvLikeCount.setText(String.valueOf(likeCount));
+        });
+
+        btnShare.setOnClickListener(v -> {
+            Toast.makeText(this, "Shared!", Toast.LENGTH_SHORT).show();
+        });
+
+        btnUpload.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, UploadActivity.class));
+        });
+
+        btnProfile.setOnClickListener(v -> {
+            // Simple profile action: Logout
+            mAuth.signOut();
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        });
+    }
+}
