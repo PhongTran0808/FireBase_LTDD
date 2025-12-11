@@ -45,12 +45,9 @@ public class UploadActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         
-        // THAY ĐỔI QUAN TRỌNG: Thử dùng đuôi .appspot.com thay vì .firebasestorage.app
-        // Nếu vẫn lỗi, bạn cần vào Console copy chính xác dòng gs://...
-        try {
+
             storageRef = FirebaseStorage.getInstance("gs://phongtran74737.appspot.com").getReference("videos");
         } catch (Exception e) {
-            // Fallback nếu url sai format, nhưng thường thì appspot.com là chuẩn
             storageRef = FirebaseStorage.getInstance().getReference("videos");
         }
 
@@ -97,7 +94,6 @@ public class UploadActivity extends AppCompatActivity {
                         btnSelectVideo.setEnabled(true);
                     })
                     .addOnProgressListener(taskSnapshot -> {
-                        // Optional: update progress
                     });
         } else {
             Toast.makeText(this, "No video selected", Toast.LENGTH_SHORT).show();

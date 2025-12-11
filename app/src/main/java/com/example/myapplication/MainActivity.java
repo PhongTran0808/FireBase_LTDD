@@ -59,9 +59,7 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setUseWideViewPort(true);
         
         webView.setWebViewClient(new WebViewClient());
-        // Load the responsive website URL here. 
-        // Since the file is not available to me, I'm using a placeholder.
-        // If it's a local file in assets: webView.loadUrl("file:///android_asset/index.html");
+
         webView.loadUrl("https://www.google.com"); 
     }
 
@@ -85,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnProfile.setOnClickListener(v -> {
-            // Simple profile action: Logout
             mAuth.signOut();
             startActivity(new Intent(MainActivity.this, LoginActivity.class));
             finish();
